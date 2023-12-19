@@ -77,6 +77,28 @@ def send_reminders(chat_id):
 
         time.sleep(1)
 
+@bot.message_handler(func=lambda message: message.text == "Получить рекомендации")
+def button_recommendations(message):
+    msg = bot.send_message(message.chat.id, 'Опишите свое текущее расписание и условия учебы:')
+    bot.register_next_step_handler(msg, process_user_text)
+
+
+def process_user_text(message):
+    chat_id = message.chat.id
+    user_text = message.text
+
+    # Вызываем функцию для получения рекомендаций по тексту пользователя
+    get_recommendations(chat_id, user_text)
+
+
+def get_recommendations(chat_id, user_text):
+    result = gpt4_free(textwrap.dedent(f'''\
+    Пользователь жалуется на учебу и запрашивает советы по оптимизации продуктивности и сохранению здоровья, а именно: {user_text}.
+    Прошу предоставить рекомендации и советы, которые могут помочь ему эффективнее учиться, справляться со стрессом и поддерживать физическое и эмоциональное здоровье.
+    Пожалуйста, включите в рекомендации упражнения, питание, сон, планирование учебного времени и другие факторы, которые могут быть полезными. Ответ должен не превышать 500 символов
+    '''))
+
+    bot.send_message(chat_id, result)
 @bot.message_handler(func=lambda message: message.text == "Создать расписание")
 def schedule_step(message):
     msg = bot.send_message(message.chat.id, 'Какие у вас есть предметы?')
