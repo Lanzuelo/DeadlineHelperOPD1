@@ -1,0 +1,1 @@
+BOT_TOKEN = '6391645031:AAE1aXvjj1B3H_anfeDBUnVPSERwm9xK-zU' # token бота
